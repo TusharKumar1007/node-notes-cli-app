@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {readDb,addDb,delDb} from './utils.js';
+import {readDb,addDb,delDb,updateNext} from './utils.js';
 
 const argv=process.argv;
 //console.log(argv)
@@ -37,4 +37,9 @@ else if(argv[2]==="--del"){
 
                 console.log("Please give id of note to delete.")
         }
+}
+else if(argv[2]==="--next"){
+	const next=await updateNext();
+	console.log(next);
+
 }
