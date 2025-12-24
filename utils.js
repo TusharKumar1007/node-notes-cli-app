@@ -14,9 +14,16 @@ export function add(...args){
 }
 
 export const readDb=async ()=>{
+	try{
 	const db=JSON.parse(await fs.readFile(dbPath,'utf-8'))
-	//console.log(notes)
 	return db
+	}catch(e){
+		if(e.message.includes("no such file")){
+			await fs.writeFile(dbPath,JSON.stringify({"next":0,"notes":[]},null,4));
+		}
+	}
+	//console.log(notes)
+	return await readDb();
 }
 const getNext=async ()=>{
         const db=await readDb();
@@ -51,15 +58,22 @@ export const delDb=async (id)=>{
 
 export const updateNext=async ()=>{
 	const db =await readDb();
+	if(db.notes.length===0) return "\n\t No Notes found Use --help for help\n"
 	let curIdx=await getNext();
-	if(curIdx<db.notes.length-1){
-		curIdx++;
-		//console.log(db.next)
-		writeDb(db,curIdx);
+	if(curIdx<db.notes.length){
+		let nextIdx=curIdx+1;
+		writeDb(db,nextIdx);
 		return db.notes[curIdx];
 	}else{
 		const reset=0;
 		writeDb(db,reset);
-		return "\n-------- cycling Notes again ------------\n";
+		console.log("\n-------- cycling Notes again ------------\n");
+		return await updateNext();
 	}
+}
+
+export const resetDb=async ()=>{
+	const db={"notes":[]};
+	writeDb(db,0);
+	
 }

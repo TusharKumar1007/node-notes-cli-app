@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {readDb,addDb,delDb,updateNext} from './utils.js';
+import {readDb,addDb,delDb,updateNext,resetDb} from './utils.js';
 
 const argv=process.argv;
 //console.log(argv)
@@ -42,4 +42,14 @@ else if(argv[2]==="--next"){
 	const next=await updateNext();
 	console.log(next);
 
+}else if(argv[2]==="--help"){
+
+	console.log("\n\ttags   \t  description");
+	console.log("\n\t--add  \t  Add a new note. Use a String");
+	console.log("\n\t--del  \t  Delete a note using its Id");
+	console.log("\n\t--next \t  Display the next Note");
+	console.log("\n\t--clear\t  Resets the notes db");
+}else if(argv[2]==="--clear"){
+
+	resetDb();
 }
